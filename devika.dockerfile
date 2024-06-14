@@ -33,4 +33,6 @@ ENV PATH="/home/nonroot/devika/.venv/bin:$HOME/.cargo/bin:$PATH"
 RUN mkdir /home/nonroot/devika/db
 RUN playwright install chromium
 
+EXPOSE 1337
+
 ENTRYPOINT [ "python3", "-m", "devika" ]
