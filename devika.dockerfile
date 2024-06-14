@@ -23,7 +23,7 @@ RUN UV_HTTP_TIMEOUT=100000 $HOME/.cargo/bin/uv pip install -r requirements.txt
 RUN playwright install-deps chromium
 
 COPY src /home/nonroot/devika/src
-COPY config.toml /home/nonroot/devika/
+# COPY config.toml /home/nonroot/devika/
 COPY devika.py /home/nonroot/devika/
 RUN chown -R nonroot:nonroot /home/nonroot/devika
 
