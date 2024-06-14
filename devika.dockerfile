@@ -30,7 +30,7 @@ RUN chown -R nonroot:nonroot /home/nonroot/devika
 USER nonroot
 WORKDIR /home/nonroot/devika
 ENV PATH="/home/nonroot/devika/.venv/bin:$HOME/.cargo/bin:$PATH"
-RUN mkdir /home/nonroot/devika/db
+RUN mkdir -p /home/nonroot/devika/db && chmod 777 /home/nonroot/devika/db
 RUN playwright install chromium
 
 EXPOSE 1337
