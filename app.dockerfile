@@ -18,7 +18,7 @@ RUN apt-get install nodejs
 # copying devika app client only
 COPY ui /home/nonroot/client/ui
 COPY src /home/nonroot/client/src
-COPY config.toml /home/nonroot/client/
+# COPY config.toml /home/nonroot/client/
 
 RUN cd ui && npm install && npm install -g npm && npm install -g bun
 RUN chown -R nonroot:nonroot /home/nonroot/client
