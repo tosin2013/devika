@@ -3,7 +3,7 @@ FROM debian:12
 # setting up os env
 USER root
 WORKDIR /home/nonroot/devika
-RUN groupadd -r nonroot && useradd -r -g nonroot -d /home/nonroot/devika -s /bin/bash nonroot
+RUN groupadd -r nonroot && useradd -u 1000 -r -g nonroot -d /home/nonroot/devika -s /bin/bash nonroot
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
