@@ -17,10 +17,13 @@ clone_or_pull() {
 
 # Function to create or source virtual environment
 create_or_source_venv() {
+    if [ -d $HOME/devika ]; then 
+        cd $HOME/devika/
+    fi
+    
     if [ -f "venv/bin/activate" ]; then
         echo "venv/bin/activate exists. Sourcing it..."
-        source venv/bin/activate
-        
+        source venv/bin/activate  
     else
         echo "venv/bin/activate does not exist. Creating it..."
         python3 -m venv venv
@@ -63,7 +66,7 @@ main() {
     install_dependancies 
     create_or_source_venv
     handle_front_end
-    cd ..
+    cd $HOME/devika/
     source venv/bin/activate
     python devika.py &
     wait
