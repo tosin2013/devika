@@ -20,7 +20,7 @@ create_or_source_venv() {
     if [ -d $HOME/devika ]; then 
         cd $HOME/devika/
     fi
-    
+
     if [ -f "venv/bin/activate" ]; then
         echo "venv/bin/activate exists. Sourcing it..."
         source venv/bin/activate  
@@ -67,6 +67,8 @@ main() {
     create_or_source_venv
     handle_front_end
     cd $HOME/devika/
+    ls -lath .
+    ls -lath venv/bin/activate || exit $?
     source venv/bin/activate
     python devika.py &
     wait
