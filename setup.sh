@@ -1,6 +1,8 @@
 #!/bin/bash
 
 GITHUB_USER="tosin2013"
+LOG_FILE_FRONTEND="devika-frontend.log"
+LOG_FILE_BACKEND="devika-backend.log"
 
 # Function to clone or pull repository
 clone_or_pull() {
@@ -48,7 +50,7 @@ handle_front_end() {
     cd ui/
     npm install
     npm run build
-    npm run preview --host=0.0.0.0 &
+    nohup npm run preview --host=0.0.0.0 > $LOG_FILE_FRONTEND 2>&1 &
 }
 
 install_dependancies(){
@@ -71,16 +73,43 @@ install_dependancies(){
 
 # Main function
 main() {
+    while getopts ":nib" opt; do
+        case ${opt} in
+            n )
+                NOUP=true
+                ;;
+            i )
+                INSTALL_DEPENDENCIES=true
+                ;;
+            b )
+                BUILD_DEPENDENCIES=true
+                ;;
+            \? )
+                echo "Invalid option: -$OPTARG" 1>&2
+                exit 1
+                ;;
+        esac
+    done
+    shift $((OPTIND -1))
+
     clone_or_pull
-    install_dependancies 
+    if [ "$INSTALL_DEPENDENCIES" = true ]; then
+        install_dependancies
+    fi
     create_or_source_venv
-    handle_front_end
+    if [ "$BUILD_DEPENDENCIES" = true ]; then
+        handle_front_end
+    fi
     cd $HOME/devika/
     ls -lath .
     ls -lath venv/bin/activate || exit $?
     source venv/bin/activate
-    python devika.py &
+    if [ "$NOUP" = true ]; then
+        nohup python devika.py > $LOG_FILE_BACKEND 2>&1 &
+    else
+        python devika.py &
+    fi
     wait
 }
 
-main
+main "$@"
