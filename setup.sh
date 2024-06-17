@@ -1,4 +1,6 @@
 #!/bin/bash
+export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+set -x
 
 GITHUB_USER="tosin2013"
 LOG_FILE_FRONTEND="devika-frontend.log"
