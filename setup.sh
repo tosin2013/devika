@@ -40,8 +40,12 @@ handle_front_end() {
 }
 
 install_dependancies(){
-    sudo apt update
-    sudo apt install python3.12 python3.12-venv
+    sudo apt update && apt upgrade -y
+    sudo apt install software-properties-common -y
+    sudo add-apt-repository ppa:deadsnakes/ppa -y
+    sudo apt update -y
+    sudo apt install python3.12 python3.12-venv -y
+
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
     export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
