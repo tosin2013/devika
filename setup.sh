@@ -21,11 +21,20 @@ create_or_source_venv() {
         cd $HOME/devika/
     fi
 
-    if [ -f "venv/bin/activate" ]; then
-        echo "venv/bin/activate exists. Sourcing it..."
-        source venv/bin/activate  
+    if [ -d "venv" ]; then
+        if [ -f "venv/bin/activate" ]; then
+            echo "venv/bin/activate exists. Sourcing it..."
+            source venv/bin/activate  
+        else
+            echo "venv/bin/activate does not exist. Creating it..."
+            python3 -m venv venv
+            source venv/bin/activate
+            pip install -r requirements.txt
+            playwright install
+            python3 -m playwright install-deps
+        fi
     else
-        echo "venv/bin/activate does not exist. Creating it..."
+        echo "venv directory does not exist. Creating it..."
         python3 -m venv venv
         source venv/bin/activate
         pip install -r requirements.txt
