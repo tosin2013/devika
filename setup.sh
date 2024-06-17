@@ -3,6 +3,7 @@
 GITHUB_USER="tosin2013"
 LOG_FILE_FRONTEND="devika-frontend.log"
 LOG_FILE_BACKEND="devika-backend.log"
+NOUP=true
 
 # Function to clone or pull repository
 clone_or_pull() {
@@ -100,7 +101,7 @@ main() {
     if [ "$BUILD_DEPENDENCIES" = true ]; then
         handle_front_end
     fi
-    cd $HOME/devika/
+    cd /root/sdevika/
     ls -lath .
     ls -lath venv/bin/activate || exit $?
     source venv/bin/activate
@@ -109,7 +110,7 @@ main() {
     else
         python devika.py &
     fi
-    wait
+    
 }
 
 main "$@"
