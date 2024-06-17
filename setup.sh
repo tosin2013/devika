@@ -106,9 +106,11 @@ main() {
     source venv/bin/activate
     if [ "$NOUP" = true ]; then
         nohup python devika.py > $LOG_FILE_BACKEND 2>&1 &
+        cd $HOME/devika/ui/
         nohup npm run preview --host=0.0.0.0 > $LOG_FILE_FRONTEND 2>&1 &
     else
         python devika.py &
+        cd $HOME/devika/ui/
         npm run preview --host=0.0.0.0 &
     fi
     
