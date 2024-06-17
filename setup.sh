@@ -48,7 +48,7 @@ handle_front_end() {
     cd ui/
     npm install
     npm run build
-    npm run preview --host &
+    npm run preview --host=0.0.0.0 &
 }
 
 install_dependancies(){
