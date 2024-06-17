@@ -103,7 +103,7 @@ main() {
     if [ "$BUILD_DEPENDENCIES" = true ]; then
         handle_front_end
     fi
-    cd /root/sdevika/
+    cd /root/devika/
     ls -lath .
     ls -lath venv/bin/activate || exit $?
     source venv/bin/activate
