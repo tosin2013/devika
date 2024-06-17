@@ -53,7 +53,7 @@ create_or_source_venv() {
 
 # Function to handle front-end
 handle_front_end() {
-    cd ui/
+    cd $HOME/devika/ui/
     npm install
     npm run build
 }
