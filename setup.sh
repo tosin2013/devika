@@ -1,13 +1,12 @@
 #!/bin/bash
-export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
-set -xe
+#export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+#set -xe
 
 GITHUB_USER="tosin2013"
 LOG_FILE_FRONTEND="devika-frontend.log"
 LOG_FILE_BACKEND="devika-backend.log"
 NOUP=true
-echo "NOUP: $NOUP"
-echo "INSTALL_DEPENDENCIES: $INSTALL_DEPENDENCIES"
+RUN_APPLICATION=true
 
 
 # Function to clone or pull repository
@@ -37,7 +36,7 @@ create_or_source_venv() {
             echo "venv/bin/activate does not exist. Creating it..."
             python3 -m venv venv
             source venv/bin/activate
-            pip install -r requirements.txt
+            pip install  -r requirements.txt
             playwright install
             python3 -m playwright install-deps
         fi
@@ -45,7 +44,7 @@ create_or_source_venv() {
         echo "venv directory does not exist. Creating it..."
         python3 -m venv venv
         source venv/bin/activate
-        pip install -r requirements.txt
+        pip install  -r requirements.txt # optional add timeout --timeout 1000
         playwright install
         python3 -m playwright install-deps
     fi
@@ -77,15 +76,52 @@ install_dependancies(){
     handle_front_end
 }
 
+# Function to run devika
+run_devika() {
+    cd ${HOME}/devika/
+    ls -lath venv/bin/activate || exit $?
+    source venv/bin/activate
+    if [ "$NOUP" = true ]; then
+        nohup python devika.py > $LOG_FILE_BACKEND 2>&1 &
+        cd $HOME/devika/ui/
+        nohup npm run preview --host=0.0.0.0 > $LOG_FILE_FRONTEND 2>&1 &
+    else
+        python devika.py &
+        cd $HOME/devika/ui/
+        npm run preview --host=0.0.0.0 &
+    fi
+}
+
+show_help() {
+    echo "Usage: $0 [-n] [-i] [-r] [-h]"
+    echo "Options:"
+    echo "  -n   Do not update (NOUP)"
+    echo "  -i   Install dependencies"
+    echo "  -r   Run the application"
+    echo "  -h   Show this help message"
+}
+
 # Main function
 main() {
-    while getopts ":ni" opt; do
+    if [ "$#" -eq 0 ]; then
+        show_help
+        exit 0
+    fi
+
+    while getopts ":nihr" opt; do
         case ${opt} in
             n )
                 NOUP=true
                 ;;
             i )
                 INSTALL_DEPENDENCIES=true
+                ;;
+            r )
+                RUN_APPLICATION=true
+                ;;
+            h )
+                show_help
+                exit 0
                 ;;
             \? )
                 echo "Invalid option: -$OPTARG" 1>&2
@@ -98,22 +134,12 @@ main() {
     clone_or_pull
     if [ "$INSTALL_DEPENDENCIES" = true ]; then
         install_dependancies
-    fi
-    create_or_source_venv
-    cd /root/devika/
-    ls -lath .
-    ls -lath venv/bin/activate || exit $?
-    source venv/bin/activate
-    if [ "$NOUP" = true ]; then
-        nohup python devika.py > $LOG_FILE_BACKEND 2>&1 &
-        cd $HOME/devika/ui/
-        nohup npm run preview --host=0.0.0.0 > $LOG_FILE_FRONTEND 2>&1 &
-    else
-        python devika.py &
-        cd $HOME/devika/ui/
-        npm run preview --host=0.0.0.0 &
+        create_or_source_venv
     fi
     
+    if [ "$RUN_APPLICATION" = true ]; then
+        run_devika
+    fi
 }
 
 main "$@"
