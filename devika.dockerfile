@@ -3,7 +3,7 @@ FROM debian:12
 # setting up os env
 USER root
 WORKDIR /home/nonroot/devika
-RUN groupadd -r nonroot && useradd -u 1000 -r -g nonroot -d /home/nonroot/devika -s /bin/bash nonroot
+RUN groupadd -r nonroot && useradd -r -g nonroot -d /home/nonroot/devika -s /bin/bash nonroot
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -20,20 +20,19 @@ ENV PATH="/home/nonroot/devika/.venv/bin:$HOME/.cargo/bin:$PATH"
 RUN $HOME/.cargo/bin/uv venv
 COPY requirements.txt /home/nonroot/devika/
 RUN UV_HTTP_TIMEOUT=100000 $HOME/.cargo/bin/uv pip install -r requirements.txt 
+
 RUN playwright install-deps chromium
+RUN playwright install chromium
 
 COPY src /home/nonroot/devika/src
-# COPY config.toml /home/nonroot/devika/
+COPY config.toml /home/nonroot/devika/
+COPY sample.config.toml /home/nonroot/devika/
 COPY devika.py /home/nonroot/devika/
 RUN chown -R nonroot:nonroot /home/nonroot/devika
 
 USER nonroot
 WORKDIR /home/nonroot/devika
 ENV PATH="/home/nonroot/devika/.venv/bin:$HOME/.cargo/bin:$PATH"
-# Create db directory, set ownership and permissions
-RUN mkdir -p /home/nonroot/devika/db && chown nonroot:nonroot /home/nonroot/devika/db && chmod 777 /home/nonroot/devika/db
-RUN playwright install chromium
-
-EXPOSE 1337
+RUN mkdir /home/nonroot/devika/db
 
 ENTRYPOINT [ "python3", "-m", "devika" ]
