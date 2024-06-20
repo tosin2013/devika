@@ -84,8 +84,8 @@ install_dependancies(){
 
 # Function to run devika
 run_devika() {
-    ls -lath ${HOME}/venv/bin/activate || exit $?
-    source ${HOME}/venv/bin/activate
+    ls -lath ${HOME}/devika/venv/bin/activate || exit $?
+    source ${HOME}/devika/venv/bin/activate
     if [ "$NOUP" = true ]; then
         cd $HOME/devika/
         nohup python devika.py > $LOG_FILE_BACKEND 2>&1 &
