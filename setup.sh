@@ -7,7 +7,12 @@ LOG_FILE_FRONTEND="devika-frontend.log"
 LOG_FILE_BACKEND="devika-backend.log"
 NOUP=true
 RUN_APPLICATION=true
-
+if [ ! -z $VITE_API_BASE_URL ];
+then
+    echo "VITE_API_BASE_URL is set to $VITE_API_BASE_URL"
+else
+    echo "VITE_API_BASE_URL is not set."
+fi 
 
 # Function to clone or pull repository
 clone_or_pull() {
@@ -54,6 +59,7 @@ create_or_source_venv() {
 handle_front_end() {
     cd $HOME/devika/ui/
     npm install
+    export VITE_API_BASE_URL=${VITE_API_BASE_URL}
     npm run build
 }
 
@@ -78,14 +84,15 @@ install_dependancies(){
 
 # Function to run devika
 run_devika() {
-    cd ${HOME}/devika/
-    ls -lath venv/bin/activate || exit $?
-    source venv/bin/activate
+    ls -lath ${HOME}/venv/bin/activate || exit $?
+    source ${HOME}/venv/bin/activate
     if [ "$NOUP" = true ]; then
+        cd $HOME/devika/
         nohup python devika.py > $LOG_FILE_BACKEND 2>&1 &
         cd $HOME/devika/ui/
         nohup npm run preview --host=0.0.0.0 > $LOG_FILE_FRONTEND 2>&1 &
     else
+        cd $HOME/devika/
         python devika.py &
         cd $HOME/devika/ui/
         npm run preview --host=0.0.0.0 &
