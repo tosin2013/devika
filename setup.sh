@@ -70,7 +70,7 @@ handle_front_end() {
 install_dependancies(){
     # Set the frontend for automatic package installation
     export DEBIAN_FRONTEND=noninteractive
-    sudo apt update && apt upgrade -y
+    sudo apt update && sudo apt upgrade -y
     sudo apt install software-properties-common -y
     sudo add-apt-repository ppa:deadsnakes/ppa -y
     sudo apt update -y
