@@ -61,6 +61,10 @@ handle_front_end() {
     npm install
     export VITE_API_BASE_URL=${VITE_API_BASE_URL}
     npm run build
+    if [ ! -z $VITE_API_BASE_URL ];
+    then
+        sed -i "s|https://localhost:3000|${VITE_API_BASE_URL}|g" $HOME/devika/devika.py
+    fi
 }
 
 install_dependancies(){
